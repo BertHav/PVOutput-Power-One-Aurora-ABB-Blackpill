@@ -20,7 +20,8 @@ Some features:<br>
 Rename userdefs_empty.h to userdefs.h and make all the necessary keys personal.<br>
 SPI0 is used for flash and ethernet.<br>
 <br>
-Wiring diagram:<br>
+All connections from specific module → Black pill<br>
+Wiring diagram: for relay board, all the relays on the board has the same function, so pick your favorite positions.<br>
 Relay_fanC    → PB6<br>
 Relay_Power_R → PB7<br>
 Relay_fanB    → PB8<br>
@@ -29,18 +30,25 @@ Relay_C_DIST  → PB12<br>
 Relay_fanA    → PB13<br>
 <br>
 keyswitch     → PA0  // keyswitch is PA0, but is forced low at activation<br>
-TX2           → PA2 UART used for RS-485<br>
-RX2           → PA3  UART used for RS-485<br>
-
-ETHERNET_SS = SCS → PA15<br>
-MISO              → A6<br>
-MOSI              → A7<br>
-SCLK              → A5<br>
-RST               → NRST R RESET<br>
-INT N.C.<br>
 <br>
-flash module:
+RS-485 module:<br>
+GND → GND → G<br>
+TXD → TX2 → PA2 UART used for RS-485<br>
+RXD → RX2 → PA3  UART used for RS-485<br>
 Vcc → 5V<br>
+<br>
+Ethernet module<br>
+5V → 5V<br>
+GND → G<br>
+SCS → PA15 (ETHERNET_SS)<br>
+MISO → A6<br>
+MOSI → A7<br>
+SCLK → A5<br>
+RST → Not Connected<br>
+INT Not Connected<br>
+<br>
+flash module:<br>
+Vcc → 3,3V<br>
 CS  → FLASH_SS → PA4<br>
 DO  → A6<br>
 GND → G → GND<br>
