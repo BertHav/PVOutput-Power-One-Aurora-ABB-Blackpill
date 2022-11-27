@@ -55,7 +55,9 @@ GND → G → GND<br>
 CLK → A5<br>
 DI  → A7<br>
 <br>
-The system is based on many different code snippets from around. AFAIK no license infringements for personal use.
+The system is based on many different code snippets from around. AFAIK no license infringements for personal use.<br>
+<br>
+
 ![blackpill-v2](https://user-images.githubusercontent.com/10601859/204104731-bc914b1f-df20-4c2a-9d31-30f6142fd4bf.jpg)
 ![Blackpill_Pinout1](https://user-images.githubusercontent.com/10601859/204104740-60a7a9cd-f710-499a-9736-66a5dcf68e12.png)
 ![W5500](https://user-images.githubusercontent.com/10601859/204104969-a928f4c0-71a8-410d-a407-b95739595a6f.jpg)
