@@ -722,7 +722,7 @@ void ServeWebClients() {
               showIPlog(webclient, segm); // "showiplog" shows and toggles the WAN IP logging
               break;
             case 8:
-              showversion(webclient, 1, segm); // "showversion", show the version build
+              showversion(webclient, 1, segm, true); // "showversion", show the version build
               break;
             case 9:
               fanDefault(webclient, segm); // "fandefault", sets the default thresholds for fan temperature
@@ -1097,13 +1097,13 @@ void ReadValue(String input, int i, EthernetClient client, IPAddress segm) {
   bool neg = false;
   int j = i + 3;
   int address = input[i + 1];
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipreadvalueshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipreadvalueshown[iip] = segm[iip];
     }
-    readvalueshown++;
     timereadvalueshown = now();
   }
+  readvalueshown++;
   Serial.print(F("String input is: "));
   Serial.println(input);
   if ((address >= 'A' && address < 'D') && (input[i + 2] = '='))
@@ -1239,39 +1239,39 @@ void ReadValue(String input, int i, EthernetClient client, IPAddress segm) {
 }
 
 void testHTTPblacklist(EthernetClient webclient, String cmd, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || iptesthttpblacklistshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       iptesthttpblacklistshown[iip] = segm[iip];
     }
-    testhttpblacklistshown++;
     timetesthttpblacklistshown = now();
   }
+  testhttpblacklistshown++;
   sprintf(temptxtbuff, "\r\n%02d:%02d:%02d Your commandline contain %s suspicious part", hour(), minute(), second(), checkForUnknownHTTPcommand(cmd) ? "a" : "no");
   textlog(temptxtbuff, false);
   webclient << temptxtbuff << F("\r\n</body>\r\n</html>");
 }
 
 void testIPwhitelist(EthernetClient webclient, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || iptestipwhitelistshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       iptestipwhitelistshown[iip] = segm[iip];
     }
-    testipwhitelistshown++;
     timetestipwhitelistshown = now();
   }
+  testipwhitelistshown++;
   sprintf(temptxtbuff, "\r\n%02d:%02d:%02d Your address: %d.%d.%d.%d %s found in the whitelist", hour(), minute(), second(), segm[0], segm[1], segm[2], segm[3], checkknownIP(segm) ? "is" : "is not");
   textlog(temptxtbuff, false);
   webclient << temptxtbuff << F("\r\n</body>\r\n</html>");
 }
 
 void startTFTP(EthernetClient webclient, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipstarttftpshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipstarttftpshown[iip] = segm[iip];
     }
-    starttftpshown++;
     timestarttftpshown = now();
   }
+  starttftpshown++;
   tftpInit(webclient);
 }
 
@@ -1280,13 +1280,13 @@ void setBrCorrFact(EthernetClient webclient, String cmdstring, IPAddress segm) {
   int dt = cmdstring.indexOf(".");
   float value, fraction;
   char c;
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipsetbrcorrfactshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipsetbrcorrfactshown[iip] = segm[iip];
     }
-    setbrcorrfactshown++;
     timesetbrcorrfactshown = now();
   }
+  setbrcorrfactshown++;
   if (is > 0 && dt > 0 && dt < 22) {
     if ( !isnan(flash.readFloat(BrCorrFact_addr))) {
       BrCorrFact = flash.readFloat(BrCorrFact_addr);
@@ -1397,25 +1397,25 @@ void reportunkwncmd(EthernetClient client, String cmdstring, IPAddress segm) {
 }
 
 void eraseCounters(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || iperasecountersshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       iperasecountersshown[iip] = segm[iip];
     }
-    erasecountersshown++;
     timeerasecountersshown = now();
   }
+  erasecountersshown++;
   eraseDayYield();
   client.println(F("<p>Day counters erased (in flash).</p>\r\n</body>\r\n</html>"));
 }
 
 void fanDefault(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipfandefaultshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipfandefaultshown[iip] = segm[iip];
     }
-    fandefaultshown++;
     timefandefaultshown = now();
   }
+  fandefaultshown++;
   tempFanAOff = 36.5; // fan A off temp was 37
   tempFanBOff = 38.0; // fan B off temp was 38
   tempFanCOff = 37.0; // fan C off temp was 37,5
@@ -1428,24 +1428,24 @@ void fanDefault(EthernetClient client, IPAddress segm) {
 }
 
 void WolfSSLMailSwitch(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipwolfsslmailswitchshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipwolfsslmailswitchshown[iip] = segm[iip];
     }
-    wolfsslmailswitchshown++;
     timewolfsslmailswitchshown = now();
   }
+  wolfsslmailswitchshown++;
   setwolfSSLMail(client);
 }
 
 void showFan(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowfanshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowfanshown[iip] = segm[iip];
     }
-    showfanshown++;
     timeshowfanshown = now();
   }
+  showfanshown++;
   client << (F("<p>Fan switch temperature: <br>"));
   float fanoff;
   float fanon;
@@ -1466,13 +1466,13 @@ void showFan(EthernetClient client, IPAddress segm) {
 }
 
 void switchLogging(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipswitchloggingshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipswitchloggingshown[iip] = segm[iip];
     }
-    switchloggingshown++;
     timeswitchloggingshown = now();
   }
+  switchloggingshown++;
   if (min_serial == false) {
     min_serial = true;
   }
@@ -1501,13 +1501,13 @@ void switchLogging(EthernetClient client, IPAddress segm) {
 }
 
 void showPVOutputlog(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowpvoutputlogshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowpvoutputlogshown[iip] = segm[iip];
     }
-    showpvoutputlogshown++;
     timeshowpvoutputlogshown = now();
   }
+  showpvoutputlogshown++;
   textStringLog("current pvoutputlogging: ", false);
   pvoutputlog ? textStringLog("true", false) : textStringLog("false", false);
   textStringLog(" pvoutputlogging switched to: ", false);
@@ -1536,13 +1536,13 @@ void showPVOutputlog(EthernetClient client, IPAddress segm) {
 }
 
 void showMailLogging(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowmailloggingshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowmailloggingshown[iip] = segm[iip];
     }
-    showmailloggingshown++;
     timeshowmailloggingshown = now();
   }
+  showmailloggingshown++;
   textStringLog("current maillogging: ", false);
   maillogging ? textStringLog("on", false) : textStringLog("off", false);
   textStringLog(" maillogging switched to: ", false);
@@ -1571,13 +1571,13 @@ void showMailLogging(EthernetClient client, IPAddress segm) {
 }
 
 void showIPlog(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowiplogshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowiplogshown[iip] = segm[iip];
     }
-    showiplogshown++;
     timeshowiplogshown = now();
   }
+  showiplogshown++;
   textStringLog("current iplogging: ", false);
   iplog ? textStringLog("on", false) : textStringLog("off", false);
   textStringLog(" iplogging switched to: ", false);
@@ -1630,39 +1630,39 @@ void showWeatherlog(EthernetClient client, IPAddress segm) {
     client.print(F("off"));
   client.println(F(".</p>"));
   client << (F("</body>\r\n</html>"));
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowweatherlogshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowweatherlogshown[iip] = segm[iip];
     }
-    showweatherlogshown++;
     timeshowweatherlogshown = now();
   }
+  showweatherlogshown++;
 }
 
 
 void SaveYield(EthernetClient client, IPAddress segm) {
   StoreDayYield(day(), month());
   client.println(F("<p>Yield for this day stored.</p>\r\n</body>\r\n</html>"));
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipsaveyieldshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipsaveyieldshown[iip] = segm[iip];
     }
-    saveyieldshown++;
     timesaveyieldshown = now();
   }
+  saveyieldshown++;
 }
 
 void SaveValue(EthernetClient client, IPAddress segm) {
   client.println(F("<p>Start storing variables for this day to prepare for restore.</p>\r\n"));
   StoreDayTotal();
   client.println(F("<p>Variables for this day stored for restore.</p>\r\n</body>\r\n</html>"));
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipsavevalueshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipsavevalueshown[iip] = segm[iip];
     }
-    savevalueshown++;
     timesavevalueshown = now();
   }
+  savevalueshown++;
 }
 
 void showIP(EthernetClient client, IPAddress segm) {
@@ -1671,16 +1671,25 @@ void showIP(EthernetClient client, IPAddress segm) {
   sprintf(webData, "%02X-%02X-%02X-%02X-%02X-%02X<br>\r\n", macBuffer[0], macBuffer[1], macBuffer[2], macBuffer[3], macBuffer[4], macBuffer[5]);  //webdata is max 96
   client << (F("Physical address: ")) << webData;
   client << (F("LAN IP address: ")) << Ethernet.localIP() << (F("</p>\r\n</body>\r\n</html>"));
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowipshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowipshown[iip] = segm[iip];
     }
-    showipshown++;
     timeshowipshown = now();
   }
+  showipshown++;
 }
 
-void showversion(EthernetClient client, bool endtable, IPAddress segm) {
+void showversion(EthernetClient client, bool endtable, IPAddress segm, bool direct) {
+  if (direct) {
+    if (!isIPself(segm) || ipshowversionshown[0] == 0) {
+      for (int iip = 0; iip < 4; iip++) {
+        ipshowversionshown[iip] = segm[iip];
+      }
+      timeshowversionshown = now();
+    }
+    showversionshown++;
+  }
   client << (F("<table border=\"1\" cellspacing=\"0\">\r\n")) ;
   client << F("<tr><td colspan=\"11\">&copy; ") << F(NAME) << ' ' << F(WELCOME) << (F(" PVI version ")) << F(PVIVersion) << F(Release);
   client << F("<br>\r\nRemember 31 mai 2018 A.L. H - d H, 3 december 2019 Cleo");
@@ -1692,30 +1701,30 @@ void showversion(EthernetClient client, bool endtable, IPAddress segm) {
   if (endtable) {
     client << (F("</table>\r\n</body>\r\n</html>"));
   }
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipshowversionshown[iip] = segm[iip];
-    }
-    showversionshown++;
-    timeshowversionshown = now();
-  }
 }
 
 void sendRobotstxt(EthernetClient client, IPAddress segm) {
+  if (!isIPself(segm) || ipsendRobotstxtshown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      ipsendRobotstxtshown[iip] = segm[iip];
+    }
+    timesendRobotstxtshown = now();
+  }
+  sendRobotstxtshown++;
   client << (F("HTTP/1.1 200 OK\r\n"));
   client << (F("Content-Type: text/plain; charset=utf-8\r\n"));
   client << (F("Connection: close\r\n\r\n"));
   client << (F("User-agent: *\nDisallow: /\n"));
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipsendRobotstxtshown[iip] = segm[iip];
-    }
-    sendRobotstxtshown++;
-    timesendRobotstxtshown = now();
-  }
 }
 
 void send404(EthernetClient client, IPAddress segm) {
+  if (!isIPself(segm) || ipsend404shown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      ipsend404shown[iip] = segm[iip];
+    }
+    timesend404shown = now();
+  }
+  send404shown++;
   client << (F("HTTP/1.1 404 Not Found\r\n"));
   client << (F("Content-Type: text/html; charset=UTF-8\r\n"));
   client << (F("Connection: close\r\n\r\n"));
@@ -1725,19 +1734,19 @@ void send404(EthernetClient client, IPAddress segm) {
   client << (F("<title>Error 404 (Not Found)!!!</title>\r\n"));
   client << (F("<p>404 Not Found\r\nThe requested URL was not found on this server.</p>\r\n"));
   client << (F("</html>"));
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipsend404shown[iip] = segm[iip];
-    }
-    send404shown++;
-    timesend404shown = now();
-  }
 }
 
 void DumpYield(EthernetClient client, int rm, IPAddress segm) {
   byte monthIndex;
   byte dmpmonth = month();
   int dmpyear = year();
+  if (!isIPself(segm) || ipdumpyieldshown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      ipdumpyieldshown[iip] = segm[iip];
+    }
+    timedumpyieldshown = now();
+  }
+  dumpyieldshown++;
   if (dmpmonth > 2)
   {
     dmpmonth = dmpmonth - 2; //pointer to 2 month back
@@ -1790,13 +1799,6 @@ void DumpYield(EthernetClient client, int rm, IPAddress segm) {
     }
   }
   client << br << (F("</p>\r\n</body>"));
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipdumpyieldshown[iip] = segm[iip];
-    }
-    dumpyieldshown++;
-    timedumpyieldshown = now();
-  }
 }
 
 void dump_Flash_Row(EthernetClient client, unsigned long startaddres) {
@@ -1895,13 +1897,18 @@ void flash_serial_dump_table(EthernetClient client, IPAddress rsegm) {
   // address counter
   int i;
   // row bytes counter
-  int j;
+  int j = 0;   // initialize column counter
   // byte read from eeprom
   byte b;
   // temporary buffer for sprintf
   //  char buf[11]; replaced by msgchararray
-  // initialize column counter
-  j = 0;
+  if (!isIPself(rsegm) || ipflash_serial_dump_tableshown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      ipflash_serial_dump_tableshown[iip] = rsegm[iip];
+    }
+    timeflash_serial_dump_tableshown = now();
+  }
+  flash_serial_dump_tableshown++;
   client << (F("<pre style=\"font-family: DejaVu Sans Mono, monospace; font-size:1em; text-align:left; color:#000; background-color:#fff;\">"));
 #if defined(ARCH_STM32)|| defined(ARDUINO_ARCH_ESP32) || defined(STM32F4xx)
 #ifdef OPTION_FLASH
@@ -2156,16 +2163,16 @@ void flash_serial_dump_table(EthernetClient client, IPAddress rsegm) {
 #endif
 #endif
   client << (F("\r\n</pre></body>\r\n</html>"));
-  if (!isIPself(rsegm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipflash_serial_dump_tableshown[iip] = rsegm[iip];
-    }
-    flash_serial_dump_tableshown++;
-    timeflash_serial_dump_tableshown = now();
-  }
 }
 
 void UpdateTimeWeb(EthernetClient client, IPAddress segm) {
+  if (!isIPself(segm) || ipupdatetimewebshown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      ipupdatetimewebshown[iip] = segm[iip];
+    }
+    timeupdatetimewebshown = now();
+  }
+  updatetimewebshown++;
   client << (F("<p>Current status of time: ")) << timeStatus();
   client << (F("<br>\r\nRequesting new time..."));
   UpdateTime(); // reload the ntp time
@@ -2176,17 +2183,17 @@ void UpdateTimeWeb(EthernetClient client, IPAddress segm) {
     sprintf(temptxtbuff, "\r\n%02d:%02d:%02d Polling PVI: ", hour(), minute(), second());  // temptxtbuff is max 1024
     textlog(temptxtbuff, false);
   }
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipupdatetimewebshown[iip] = segm[iip];
-    }
-    updatetimewebshown++;
-    timeupdatetimewebshown = now();
-  }
 }
 
 void help(EthernetClient client, IPAddress segm) {
   char cobuff[16];
+  if (!isIPself(segm) || iphelpshown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      iphelpshown[iip] = segm[iip];
+    }
+    timehelpshown = now();
+  }
+  helpshown++;
   if (HTTPlog) {
     textStringLog("\r\nethernet TX buffer available at start help: ", false);
     itoa(client.availableForWrite(), cobuff, 10);
@@ -2253,16 +2260,16 @@ void help(EthernetClient client, IPAddress segm) {
     itoa(client.availableForWrite(), cobuff, 10);
     textlog(cobuff, true);
   }
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      iphelpshown[iip] = segm[iip];
-    }
-    helpshown++;
-    timehelpshown = now();
-  }
 }
 
 void showPVOstring(EthernetClient client, IPAddress segm) {
+  if (!isIPself(segm) || ipshowpvostringshown[0] == 0) {
+    for (int iip = 0; iip < 4; iip++) {
+      ipshowpvostringshown[iip] = segm[iip];
+    }
+    timeshowpvostringshown = now();
+  }
+  showpvostringshown++;
   if (maillog[0] != 0 )
   { // whipe key
     for (int i = 34 ; i < 74 ; i++ ) {
@@ -2274,23 +2281,16 @@ void showPVOstring(EthernetClient client, IPAddress segm) {
   else
     client << (F("<p>Sorry, no last PVOutput update string available.</p>"));
   client << (F("<br>\r\n</body>\r\n</html>"));
-  if (!isIPself(segm)) {
-    for (int iip = 0; iip < 4; iip++) {
-      ipshowpvostringshown[iip] = segm[iip];
-    }
-    showpvostringshown++;
-    timeshowpvostringshown = now();
-  }
 }
 
 void showUnknownCmd(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowunknowncmdshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowunknowncmdshown[iip] = segm[iip];
     }
-    showunknowncmdshown++;
     timeshowunknowncmdshown = now();
   }
+  showunknowncmdshown++;
   if (unknownCmd_total > 0) {
     client << (F("<table border=\"1\" cellspacing=\"0\">\r\n<caption>Following commands are received, which cold not be correct interpreted.</caption>\r\n"));
     client << F("<tr><th>Time:</th><th>From IP:</th><th>Well known IP:</th><th>command length:</th><th>Received command request:</th><th>abuseConfidenceScore:</th><th>Report to AbuseIPDB</th></tr><br>\r\n");
@@ -2320,13 +2320,13 @@ void showUnknownCmd(EthernetClient client, IPAddress segm) {
 }
 
 void ShowSuspectURL(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowsuspecturlshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowsuspecturlshown[iip] = segm[iip];
     }
-    showsuspecturlshown++;
     timeshowsuspecturlshown = now();
   }
+  showsuspecturlshown++;
   if (suspicious_total > 0) {
     client << (F("<table border=\"1\" cellspacing=\"0\">\r\n<caption>Following commands are received, which contains suspicious headers or commands.</caption>\r\n"));
     client << F("<tr><th>No:</th><th>Time:</th><th>From IP:</th><th>command length:</th><th>Received command request:</th><th>abuseConfidenceScore:</th></tr>\r\n");
@@ -2344,13 +2344,13 @@ void ShowSuspectURL(EthernetClient client, IPAddress segm) {
 }
 
 void ShowStatus(EthernetClient client, bool extended, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowstatusshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowstatusshown[iip] = segm[iip];
     }
-    showstatusshown++;
     timeshowstatusshown = now();
   }
+  showstatusshown++;
   if (extended) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowstatusextshown[iip] = segm[iip];
@@ -2359,7 +2359,7 @@ void ShowStatus(EthernetClient client, bool extended, IPAddress segm) {
     timeshowstatusextshown = now();
   }
   client << (F("<table border=3 cellpadding=10 cellspacing=10><tr><td>\r\n"));
-  showversion(client, 0, segm);
+  showversion(client, 0, segm, false);
   client << F("<tr><td colspan=\"11\"><br>Sketch start time: ") << DateTime(sketchStartTime);
   client << (F(" &rArr; Uptime: ")) << upTime / (24 * 60) << "d:" << (upTime % (24 * 60)) / 60 << "h:" << upTime % 60 << (F("m<br>"));
   client << (F("Current time in Houten (NL): ")) << DateTime(now()) << (F("<br>"));
@@ -2984,7 +2984,7 @@ void showPVIdebug(EthernetClient client, IPAddress segm) {
      client << (F("<td>")) << crcErrgetEnergyTotal << (F("<td>")) << crcErrgetGridPowerPeakDay << (F("</tr></table><br>"));
   */
   //  delay(25);
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowpvidebugshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowpvidebugshown[iip] = segm[iip];
     }
@@ -3013,37 +3013,37 @@ void showPVIdebug(EthernetClient client, IPAddress segm) {
 }
 
 void showPluvioURL(EthernetClient client, IPAddress segm) {
-  client << F(("<p><br>pluvio data URL: <a href=\"https://gpsgadget.buienradar.nl/data/raintext/?lat=52.02&lon=5.17\">https://gpsgadget.buienradar.nl/data/raintext/?lat=52.02&lon=5.17</a></p>\r\n</body>\r\n</html>"));
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowpluviourlshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowpluviourlshown[iip] = segm[iip];
     }
-    showpluviourlshown++;
     timeshowpluviourlshown = now();
   }
+  showpluviourlshown++;
+  client << F(("<p><br>pluvio data URL: <a href=\"https://gpsgadget.buienradar.nl/data/raintext/?lat=52.02&lon=5.17\">https://gpsgadget.buienradar.nl/data/raintext/?lat=52.02&lon=5.17</a></p>\r\n</body>\r\n</html>"));
 }
 
 void GoUpdateDNS(EthernetClient client, IPAddress segm) {
-  client << F(("<p>Start update DynDNS entry, response ... "));
-  updateDNS() ? client << F("Succes ") : client << F("Failed ");
-  client << dynDNSresponse << (F(" @ ")) << DateTime(dynDNSResponseTime) << (F("</p>\r\n</body>\r\n</html>"));
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipgoupdatednsshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipgoupdatednsshown[iip] = segm[iip];
     }
-    goupdatednsshown++;
     timegoupdatednsshown = now();
   }
+  goupdatednsshown++;
+  client << F(("<p>Start update DynDNS entry, response ... "));
+  updateDNS() ? client << F("Succes ") : client << F("Failed ");
+  client << dynDNSresponse << (F(" @ ")) << DateTime(dynDNSResponseTime) << (F("</p>\r\n</body>\r\n</html>"));
 }
 
 void UpdateDNSKey(EthernetClient client, String cmdString, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipupdatednskeyshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipupdatednskeyshown[iip] = segm[iip];
     }
-    updatednskeyshown++;
     timeupdatednskeyshown = now();
   }
+  updatednskeyshown++;
   int i = cmdString.indexOf("?");
   if ( i != -1 ) {  // this may never occur, because the command is already determined
     int sl = cmdString.length();
@@ -3163,13 +3163,13 @@ void UpdateDNSKey(EthernetClient client, String cmdString, IPAddress segm) {
 
 void ethernetlogging(EthernetClient client, IPAddress segm) {
   char cobuff[16];
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipethernetloggingshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipethernetloggingshown[iip] = segm[iip];
     }
-    ethernetloggingshown++;
     timeethernetloggingshown = now();
   }
+  ethernetloggingshown++;
   textStringLog("current Ethernetlogging: ", false);
   ethrlog ? textStringLog("on", false) : textStringLog("off", false);
   textStringLog(" Ethernetlogging switched to: ", false);
@@ -3200,13 +3200,13 @@ void ethernetlogging(EthernetClient client, IPAddress segm) {
 }
 
 void showBufferremaining(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowbufferremainingshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowbufferremainingshown[iip] = segm[iip];
     }
-    showbufferremainingshown++;
     timeshowbufferremainingshown = now();
   }
+  showbufferremainingshown++;
   textStringLog("current showbufferremaining: ", false);
   showbufferremaining ? textStringLog("->on", false) : textStringLog("->off", false);
   Serial.print(F(" showbufferremaining switched to: "));
@@ -3235,13 +3235,13 @@ void showBufferremaining(EthernetClient client, IPAddress segm) {
 }
 
 void show_logging(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshow_loggingshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshow_loggingshown[iip] = segm[iip];
     }
-    show_loggingshown++;
     timeshow_loggingshown = now();
   }
+  show_loggingshown++;
   client << (F("Serial logging:              ")) << (min_serial ? F("off") : F("on")) << F("<br>\r\n");
   client << (F("current Ethernetlogging:     ")) << (ethrlog ? F("on") : F("off")) << F("<br>\r\n");
   client << (F("Weather logging:             ")) << (showbuffer ?  F("on") : F("off")) << F("<br>\r\n");
@@ -3266,13 +3266,13 @@ int freeRam()
 }
 
 void display_memoryinfo(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipdisplay_memoryinfoshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipdisplay_memoryinfoshown[iip] = segm[iip];
     }
-    display_memoryinfoshown++;
     timedisplay_memoryinfoshown = now();
   }
+  display_memoryinfoshown++;
 #if defined (STM32F4xx)
   client.print(F("<p align=\"left\">========Allocated memory blocks========<br>\r\n"));
   display_mallinfo(client);
@@ -3281,13 +3281,13 @@ void display_memoryinfo(EthernetClient client, IPAddress segm) {
 }
 
 void forceEmail(EthernetClient client, IPAddress segm) {
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipforceemailshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipforceemailshown[iip] = segm[iip];
     }
-    forceemailshown++;
     timeforceemailshown = now();
   }
+  forceemailshown++;
   client << (F("<p align=\"left\">Sending forced daily mail with webcontent\r\n")) <<  br;
   if (sendEmail(9) != 1) {
     client.print(F("Error during mail sending: "));
@@ -3409,13 +3409,13 @@ void ShowSockStatus(EthernetClient client, IPAddress segm) {
     0x22 = UDP socket.
   */
   char cobuff[16];
-  if (!isIPself(segm)) {
+  if (!isIPself(segm) || ipshowsockstatusshown[0] == 0) {
     for (int iip = 0; iip < 4; iip++) {
       ipshowsockstatusshown[iip] = segm[iip];
     }
-    showsockstatusshown++;
     timeshowsockstatusshown = now();
   }
+  showsockstatusshown++;
   client << (F("<p>"));
   textStringLog("Handling show Sockets", true);
   client << F("Value for disconnect timer: ") << DISCONNECT_TIMER << F("seconds<br>\r\n");
