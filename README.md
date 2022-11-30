@@ -2,21 +2,16 @@
 
 Arduino library to poll an Power-One (ABB) Aurora inverter and upload the readed values to PVoutput.org.
 
-The sketch is written for a Blackpill SOC in conjunction with external flash W25Q128, RS-485 duplex module and an ethernet W5500 module.<br>
+The sketch is written for a Blackpill SOC in conjunction with external flash, RS-485 duplex module and an ethernet W5500 module.<br>
 Some features:<br>
-- Polls every 10 seconds the Power One Aurora for most recent yield and status. When PVI is sleeping it polls once a minute with a short time to keep     webserver performance for clients.<br>
-- Uploads every 5 minutes to pvoutput.org.<br>
-- At end of daylight it sends two mails containing dayyield, weather and status updates.<br>
-- Before midnight update to pvoutput for pluvio updates.<br>
-- Send email alerts for different uncommon conditions.<br>
 - Retrieving weather from weerlive.nl<br>
 - Retreaving rain information from buienradar.nl<br>
 - Using NTP.<br>
 - Automatic switching between summer/winter time.<br>
 - registering dynamic DNS at freedns.com.<br>
 - Detecting WAN IP changes and reregistering at freedns.<br>
-- Controls 3 fans for inverter cooling preventing power degradation at hot days.<br>
-- Includes a webserver for remote control and statusinformation.<br>
+- controls 3 fans for inverter cooling preventing power degradation at hot days.<br>
+- includes a webserver for remote control and statusinformation.<br>
 - Acts as a honeypot and reports to abuseipdb.<br>
 - Uses wolfSSL for TLS connections.<br>
 - Has different loglevels for monitoring and debugging.<br>
@@ -60,10 +55,7 @@ GND → G → GND<br>
 CLK → A5<br>
 DI  → A7<br>
 <br>
-A flash module soldered to the back of the Black pill could be used
-<br>
 The system is based on many different code snippets from around. AFAIK no license infringements for personal use.<br>
-The sketch needs about 400kB of ROM and the necessary memory for TLS connections, a Black pill fulfills this, a Blue pill has insufficient space to accomodate the requirements.<br>
 <br>
 
 ![blackpill-v2](https://user-images.githubusercontent.com/10601859/204104731-bc914b1f-df20-4c2a-9d31-30f6142fd4bf.jpg)

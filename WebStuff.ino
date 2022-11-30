@@ -2966,7 +2966,7 @@ void ShowStatus(EthernetClient client, bool extended, IPAddress segm) {
   client << (F("<p><br>Weather references see: <a href=\"http://www.weerstation-houten.nl/\">http://www.weerstation-houten.nl</a></p>\r\n"));
   client << (F("<p><br>Weather powered by: <a href=\"http://weerlive.nl/\">KNMI Weergegevens via Weerlive.nl</a></p>\r\n"));
   client << (F("<p><a href=\"http://validator.w3.org/check?uri=referer\"><img src=\"http://www.w3.org/Icons/valid-html401\" alt=\"Valid HTML 4.01 Strict\" height=\"31\" width=\"88\"></a></p>\r\n"));
-  client << (F("<p><br>contact: baai.hv@gmail.com</p>\r\n"));
+  client << (F("<p><br>contact: ")) << MAIL_TO << (F("</p>\r\n"));
   client << (F("</div>\r\n"));
   client << (F("</table>\r\n"));
   client << (F("</body>\r\n</html>"));
