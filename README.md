@@ -1,6 +1,6 @@
 # PVOutput-Power-One-Aurora-ABB-Blackpill
 
-Arduino library to poll an Power-One (ABB) Aurora inverter and upload the readed values to PVoutput.org.
+Arduino library to poll a Power-One (ABB) Aurora inverter and upload the readed values to PVoutput.org.
 
 The sketch is written for a Blackpill SOC in conjunction with external flash, RS-485 duplex module and an ethernet W5500 module.<br>
 Some features:<br>
